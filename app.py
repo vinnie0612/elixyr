@@ -143,7 +143,6 @@ def logout():
 @login_required
 def mine():
     images = db.get_images(session['user_id'])
-    print(images)
     return render_template('mine.html', images=images)
 
 
@@ -172,8 +171,13 @@ def upload():
 
     image_id = uuid4().hex
     save_path = os.path.join(app.config['UPLOAD_FOLDER'], image_id + '.jpg')
+    data = list(image.getdata())
+    image_without_exif = Image.new(image.mode, image.size)
+    image_without_exif.putdata(data)
 
-    image.save(save_path, 'JPEG', quality=75)
+    image_without_exif.save(save_path, 'JPEG', quality=75)
+    image_without_exif.close()
+
     logger.info(f"{Fore.GREEN}Image uploaded: {image_id}{Style.RESET_ALL}")
     db.add_image(image_id, session['user_id'])
     if request.args.get('s'):

@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Image Grid</title>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEuMDE0IiBoZWlnaHQ9IjU1LjUwOSIgdmlld0JveD0iMCAwIDUxLjAxNCA1NS41MDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgaWQ9InN2Z0dyb3VwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZm9udC1zaXplPSI5cHQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjA1Y20iIGZpbGw9IiM3MzQwYmYiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MC4wNWNtO2ZpbGw6IzczNDBiZiI+PHBhdGggZD0iTSA0NC45MTMgMzEuOSBMIDYuNzEzIDMxLjkgTCAzLjcxMyAyMS45IEwgNDAuNDEzIDIxLjkgTCAzOC4yMTMgMjMuOSBMIDM4LjIxMyAyMS4yIFEgMzguMDEzIDE4LjMgMzYuMTYzIDE2IFEgMzQuMzEzIDEzLjcgMzEuNTYzIDEyLjM1IFEgMjguODEzIDExIDI1LjcxMyAxMSBRIDIyLjcxMyAxMSAyMC4xMTMgMTEuOCBRIDE3LjUxMyAxMi42IDE1LjYxMyAxNC41IFEgMTMuNzEzIDE2LjQgMTIuNjEzIDE5LjYgUSAxMS41MTMgMjIuOCAxMS41MTMgMjcuNyBRIDExLjUxMyAzMy4xIDEzLjc2MyAzNi44NSBRIDE2LjAxMyA0MC42IDE5LjU2MyA0Mi41NSBRIDIzLjExMyA0NC41IDI3LjExMyA0NC41IFEgMzAuODEzIDQ0LjUgMzMuMDEzIDQzLjkgUSAzNS4yMTMgNDMuMyAzNi41NjMgNDIuNDUgUSAzNy45MTMgNDEuNiAzOS4wMTMgNDEgUSA0MC44MTMgNDAuMSA0Mi40MTMgNDAuMSBRIDQ0LjYxMyA0MC4xIDQ2LjA2MyA0MS42IFEgNDcuNTEzIDQzLjEgNDcuNTEzIDQ1LjEgUSA0Ny41MTMgNDcuOCA0NC43MTMgNTAgUSA0Mi4xMTMgNTIuMiAzNy40MTMgNTMuODUgUSAzMi43MTMgNTUuNSAyNy43MTMgNTUuNSBRIDE5LjIxMyA1NS41IDEyLjk2MyA1MS45NSBRIDYuNzEzIDQ4LjQgMy4zNjMgNDIuMyBRIDAuMDEzIDM2LjIgMC4wMTMgMjguNSBRIDAuMDEzIDE5LjUgMy42NjMgMTMuMTUgUSA3LjMxMyA2LjggMTMuMjEzIDMuNCBRIDE5LjExMyAwIDI1LjcxMyAwIFEgMzAuODEzIDAgMzUuMzYzIDIuMSBRIDM5LjkxMyA0LjIgNDMuNDEzIDcuODUgUSA0Ni45MTMgMTEuNSA0OC45NjMgMTYuMyBRIDUxLjAxMyAyMS4xIDUxLjAxMyAyNi41IFEgNTAuOTEzIDI4LjkgNDkuMTEzIDMwLjQgUSA0Ny4zMTMgMzEuOSA0NC45MTMgMzEuOSBaIi8+PC9nPjwvc3ZnPg=="/>
+        <title>elixyr</title>
     <style>
         @import url(https://fonts.googleapis.com/css2?family=Space+Mono&display=swap);
         body, a {
@@ -54,7 +57,7 @@
 <body>
     <h1>elixyr image upload</h1>
     
-    
+    {% if images %}
     <div id="grid" class="grid-container">
         {% for url in images %}
         <div class="griditem" style='background-image: url("/i/{{ url }}");'>
@@ -63,5 +66,8 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <p>no images</p>
+    {% endif %}
 </body>
 </html>

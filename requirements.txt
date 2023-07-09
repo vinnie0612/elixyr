@@ -4,3 +4,4 @@ gunicorn
 pillow
 colorama
 python-magic
+Flask-Limiter

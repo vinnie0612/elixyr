@@ -1,0 +1,13 @@
+version: '3'
+services:
+  elixyr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    restart: always
+    volumes:
+      - ./static/images:/app/static/images
+volumes:
+  static:

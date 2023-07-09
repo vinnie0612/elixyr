@@ -62,10 +62,10 @@ def upload():
 
     image.save(save_path, 'JPEG', quality=75)
     logger.info(f"{Fore.GREEN}Image uploaded: {image_id}{Style.RESET_ALL}")
-    if request.args.get('s') is not None:
-        return f'{image_id}\n', 200
-    else:
+    if request.args.get('s'):
         return redirect(f'/i/{image_id}')
+    else:
+        return f'{image_id}\n', 200
 
 @app.route('/i/<image_id>')
 def image(image_id):

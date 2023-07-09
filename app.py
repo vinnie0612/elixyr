@@ -33,15 +33,17 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
-def check_request(request):
-    if 'file' not in request.files:
-        return [False, 400, 'No file uploaded\n'] 
-    file = request.files['file']
+
+def check_request(req):
+    if 'file' not in req.files:
+        return [False, 400, 'No file uploaded\n']
+    file = req.files['file']
 
     if file.filename == '':
         return [False, 400, 'Empty file name\n']
 
-    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'bmp'}):
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in
+            {'png', 'jpg', 'jpeg', 'gif', 'bmp'}):
         return [False, 415, 'File extension not allowed\n']
 
     if not magic.from_buffer(file.read(), mime=True).startswith('image/'):
@@ -49,25 +51,30 @@ def check_request(request):
     file.seek(0)
     return [True, file]
 
+
 @app.errorhandler(413)
-def request_entity_too_large(error):
+def request_entity_too_large(_):
     if request.args.get('s'):
         return render_template('index.html', error=[413, "File size too large"]), 413
     return "File size too large\n", 413
 
+
 @app.errorhandler(429)
-def too_many_requests(error):
+def too_many_requests(_):
     if request.args.get('s'):
         return render_template('index.html', error=[429, "Too many requests"]), 429
     return "Too many requests\n", 429
 
+
 @app.errorhandler(404)
-def page_not_found(error):
+def page_not_found(_):
     return render_template('404.html', error="page not found"), 404
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/upload', methods=['POST'])
 @limiter.limit(app.config['RATE_LIMIT'], override_defaults=False)
@@ -85,10 +92,10 @@ def upload():
 
     # Resize image below 4K and compress
     if image.width > 3840 or image.height > 2160:
-        aspect_ratio = image.width / image.height
-        new_width = 3840 if image.width > image.height else int(2160 * aspect_ratio)
-        new_height = int(new_width / aspect_ratio)
-        
+        asp = image.width / image.height
+        new_width = 3840 if image.width > image.height else int(2160 * asp)
+        new_height = int(new_width / asp)
+
         image = image.resize((new_width, new_height), Image.LANCZOS)
 
     image_id = uuid4().hex
@@ -101,6 +108,7 @@ def upload():
     else:
         return f'{image_id}\n', 200
 
+
 @app.route('/i/<image_id>')
 def image(image_id):
     image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_id + '.jpg')
@@ -109,6 +117,7 @@ def image(image_id):
         return render_template('404.html', error="image not found"), 404
     else:
         return send_from_directory(app.config['UPLOAD_FOLDER'], image_id + '.jpg')
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8081, threaded=True)

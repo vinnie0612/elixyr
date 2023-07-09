@@ -1,3 +1,4 @@
 [flake8]
 per-file-ignores =
     app.py: E501,
+    db.py: E501,

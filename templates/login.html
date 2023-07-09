@@ -16,36 +16,31 @@
         padding: 0;
         box-sizing: border-box;
     }
-    button, label {
+    button, input {
       width: 20rem;
-    }
-    .custom-file-upload, button {
       border: 1px solid #7340bf;
-      padding: 1rem 0;
       cursor: pointer;
     }
+    button {padding: 1rem 0;}
+    #register {padding: 0.7rem 0}
+    input {padding: 0.5rem 0;}
+
+    input:focus, select:focus, textarea:focus {
+        border: 1px solid purple;
+        box-shadow: none;
+        outline:none;
+    }
+
     body, button, input, p {
       font-family: 'Space Mono', monospace;
       text-align: center;
       font-size: 1rem;
     }
-    form, #ufci {
+
+    #a {
       margin-top: 5rem;
     }
-    button {
-      background-color: #7340bf;
-      color: #000;
-      box-sizing: border-box;
-    }
-    button:disabled {
-      cursor: not-allowed;
-    }
-    input[type=file] {
-      display: none;
-    }
-    .custom-file-upload {
-      display: inline-block;
-    }
+    
     .error-message {
       color: rgb(255, 0, 0);
       border: 1px solid red;
@@ -56,34 +51,24 @@
 </head>
 <body>
   <h1>elixyr image upload</h1>
+  
   {% if error %}
   <div class="error-message">
     <h2>{{ error[0] }}</h2>
     <p>{{ error[1] }}</p>
   </div>
   {% endif %}
-  <form action="/upload?s=1" method="post" enctype="multipart/form-data">
-    <label for="file-upload" class="custom-file-upload">
-      <span id="file-name">select a file</span>
-    </label>
-    <input id="file-upload" type="file" name="file" accept="image/*" onchange="updateFileName(this); updateButtonState(this)">
-    <br><br>
-    <button aria-disabled="true" id="submit-button" type="submit" disabled>go</button>
-  </form><br><br>
-  <a href="/logout"><button>Log out</button></a>
-  <a href="/mine"><button>My images</button></a>
-  <script>
-    function updateFileName(input) {
-      const fileName = input.files[0].name;
-      document.getElementById('file-name').textContent = fileName;
-    }
-    
-    function updateButtonState(input) {
-      const submitButton = document.getElementById('submit-button');
-      submitButton.disabled = input.files.length === 0;
-    }
-    
-    updateFileName(document.getElementById('file-upload'));
-  </script>
+
+  <h2 id="a">log in</h2>
+  <form action="/login" method="post">
+    <label for="username">user</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+    <label for="password">pass</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+    <button id="submit-button" type="submit">go</button><br><br>
+  </form>
+  <a href="/register">
+    <button id="register">no account?</button>
+  </a>
 </body>
 </html>

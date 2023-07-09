@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Grid</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css2?family=Space+Mono&display=swap);
+        body, a {
+            background-color: #000;
+            color: #7340bf;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Mono', monospace;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .image-grid {
+            width: 60%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(calc(100% / 3), 1fr));
+            grid-gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-grid img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .grid-container {
+            border: solid 1px #7340bf;
+            padding: 0.5vw;
+            width: 50%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 12.25vw;
+            grid-gap: 0.6vw;
+        }
+        
+        .griditem {
+            background-size: cover;
+            background-position: center;
+            padding: 2vw;
+            font-size: 0.8em;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>elixyr image upload</h1>
+    
+    
+    <div id="grid" class="grid-container">
+        {% for url in images %}
+        <div class="griditem" style='background-image: url("/i/{{ url }}");'>
+            <a href="/d/{{url}}">delete</a>
+            <a href="/i/{{url}}">open</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

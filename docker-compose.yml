@@ -9,5 +9,7 @@ services:
     restart: always
     volumes:
       - ./static/images:/app/static/images
+      - ./db:/app/db
 volumes:
   static:
+  db:

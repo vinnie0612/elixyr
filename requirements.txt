@@ -5,3 +5,6 @@ pillow
 colorama
 python-magic
 Flask-Limiter
+flask_session
+SQLAlchemy
+bcrypt

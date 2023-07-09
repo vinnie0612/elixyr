@@ -2,8 +2,10 @@ import logging
 import os
 from uuid import uuid4
 
+import magic
 from colorama import Fore, Style, init
-from flask import Flask, render_template, redirect, request, send_from_directory
+from flask import (Flask, redirect, render_template, request,
+                   send_from_directory)
 from flask_cors import CORS
 from PIL import Image
 
@@ -24,14 +26,14 @@ werkzeug_logger.setLevel(logging.ERROR)
 
 def check_request(request):
     if 'file' not in request.files:
-        return [False, 400, 'No file uploaded'] 
+        return [False, 400, 'No file uploaded\n'] 
     file = request.files['file']
 
     if file.filename == '':
-        return [False, 400, 'Empty file name']
+        return [False, 400, 'Empty file name\n']
 
     if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'bmp'}):
-        return [False, 403, 'File extension not allowed']
+        return [False, 403, 'File extension not allowed\n']
 
     return [True, file]
 
@@ -45,7 +47,14 @@ def upload():
     if not check[0]:
         logger.error(f"{Fore.RED}Upload failed: {check[2]}{Style.RESET_ALL}")  # Log error message
         return check[2], check[1]
+
+
     file = check[1]
+
+    if not magic.from_buffer(file.read(), mime=True).startswith('image/'):
+        return 'Invalid image file\n', 400
+    file.seek(0)
+
     image = Image.open(file)
     image = image.convert('RGB')
 

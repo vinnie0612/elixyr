@@ -30,7 +30,7 @@ def check_request(request):
     if file.filename == '':
         return [False, 400, 'Empty file name']
 
-    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}):
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'bmp'}):
         return [False, 403, 'File extension not allowed']
 
     return [True, file]

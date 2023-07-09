@@ -1,1 +1,2 @@
 UPLOAD_FOLDER = 'static/images'
+MAX_CONTENT_LENGTH = 10 * 1000 * 1000

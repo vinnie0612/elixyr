@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, send_from_directory
-from flask_cors import CORS
-from PIL import Image
-from uuid import uuid4
 import logging
 import os
-from colorama import init, Fore, Style
+from uuid import uuid4
+
+from colorama import Fore, Style, init
+from flask import Flask, render_template, redirect, request, send_from_directory
+from flask_cors import CORS
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +21,6 @@ logger.setLevel(logging.DEBUG)
 
 werkzeug_logger = logging.getLogger('werkzeug')
 werkzeug_logger.setLevel(logging.ERROR)
-
 
 def check_request(request):
     if 'file' not in request.files:
@@ -44,30 +44,30 @@ def upload():
     check = check_request(request)
     if not check[0]:
         logger.error(f"{Fore.RED}Upload failed: {check[2]}{Style.RESET_ALL}")  # Log error message
-        return check[1], check[2]
+        return check[2], check[1]
     file = check[1]
     image = Image.open(file)
     image = image.convert('RGB')
 
-    # Check if the image is above 3840x2160 pixels
+    # Resize image below 4K and compress
     if image.width > 3840 or image.height > 2160:
-        # Calculate the new dimensions while preserving aspect ratio
         aspect_ratio = image.width / image.height
         new_width = 3840 if image.width > image.height else int(2160 * aspect_ratio)
         new_height = int(new_width / aspect_ratio)
         
-        # Resize the image
         image = image.resize((new_width, new_height), Image.LANCZOS)
 
     image_id = uuid4().hex
     save_path = os.path.join(app.config['UPLOAD_FOLDER'], image_id + '.jpg')
 
     image.save(save_path, 'JPEG', quality=75)
-    logger.info(f"{Fore.GREEN}Image uploaded: {image_id}{Style.RESET_ALL}")  # Log image upload
+    logger.info(f"{Fore.GREEN}Image uploaded: {image_id}{Style.RESET_ALL}")
+    if request.args.get('s') is not None:
+        return f'{image_id}\n', 200
+    else:
+        return redirect(f'/i/{image_id}')
 
-    return f'{image_id}\n', 200
-
-@app.route('/<image_id>')
+@app.route('/i/<image_id>')
 def image(image_id):
     image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_id + '.jpg')
     if not os.path.exists(image_path):

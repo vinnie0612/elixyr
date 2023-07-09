@@ -3,14 +3,13 @@ import os
 from uuid import uuid4
 
 import magic
-from functools import wraps
 from colorama import Fore, Style, init
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory)
 from flask_cors import CORS
-from PIL import Image
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app)
@@ -51,19 +50,19 @@ def check_request(request):
     return [True, file]
 
 @app.errorhandler(413)
-def request_entity_too_large():
+def request_entity_too_large(error):
     if request.args.get('s'):
         return render_template('index.html', error=[413, "File size too large"]), 413
     return "File size too large\n", 413
 
 @app.errorhandler(429)
-def too_many_requests(*args, **kwargs):
+def too_many_requests(error):
     if request.args.get('s'):
         return render_template('index.html', error=[429, "Too many requests"]), 429
     return "Too many requests\n", 429
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     return render_template('404.html', error="page not found"), 404
 
 @app.route('/')
@@ -71,7 +70,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
-@limiter.limit("40/minute", override_defaults=False)
+@limiter.limit(app.config['RATE_LIMIT'], override_defaults=False)
 def upload():
     check = check_request(request)
     if not check[0]:

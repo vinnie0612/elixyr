@@ -10,6 +10,9 @@ COPY requirements.txt .
 # Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install libmagic for python-magic
+RUN apk add libmagic
+
 # Copy the Flask application code to the working directory
 COPY . .
 
